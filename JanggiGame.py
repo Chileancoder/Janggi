@@ -1,10 +1,16 @@
 # Author: Sebastian Gajardo
 # Date: 2/21/21
-# Description: Janggi Koren chess game portfolio project. Consists of Janggi Piece parent class, blue general, red
+# Description: Janggi Korean chess game portfolio project. Consists of Janggi Piece parent class, blue general, red
 # general, blue guard, red guard, blue soldier, red soldier, horse, elephant, chariot and cannon child/sub classes
 # to represent the pieces of the game and a Janggi game class to represent the actual game that hold both the game board
 # and hold the players, one red and one blue. Each game piece has specific movement rules and the game is won by a
 # player when they put the other player in a checkmate situation where they can't make a legal move on the next turn.
+# Decided to not have a player class because the game will always have two players, if it had a variable set of players
+# it would be necessary. All pieces hold there specific movement rules instead of the game, since it's an individual
+# piece characteristic. Used recursion to cover possible moves for pieces, made it much easier than iterating through
+# because of the complex rules set for each player. Used list comprehensions to represent the whole board and each
+# fortress that are passed to each piece when making a move and used sets to represent all possible moves for each
+# piece because they don't allow repeats.
 
 class JanggiPiece:
     """
@@ -1177,6 +1183,130 @@ def main():
     j.make_move("f10", "d8")  # True, red cannon diagonal capture blue horse within fortress, jumping over blue general.
     j.print_board()
     print(j.get_blue_pieces())  # Blue horse captured so taken out of blue player pieces in game.
+    print(j.get_current_turn())
+    j.make_move("a5", "a4")  # True, blue soldier captures red soldier.
+    j.print_board()
+    j.make_move("a1", "a4")  # True, red chariot captures blue soldier.
+    j.print_board()
+    j.make_move("e9", "d8")  # True, blue general captures red cannon.
+    j.print_board()
+    j.make_move("e2", "f2")  # True, red guard captures blue elephant.
+    j.print_board()
+    j.make_move("i7", "i6")  # True, blue soldier forward move.
+    j.print_board()
+    j.make_move("c5", "c6")  # True, red soldier forward move.
+    j.print_board()
+    j.make_move("d6", "c6")  # True, blue chariot captures red soldier.
+    j.print_board()
+    j.make_move("a4", "b4")  # True, red chariot horizontal move.
+    j.print_board()
+    j.make_move("b10", "d7")  # True,  blue elephant right and up diagonal.
+    j.print_board()
+    j.make_move("b4", "b8")  # True, red chariot captures blue cannon and checks blue general.
+    j.print_board()
+    j.make_move("d8", "e9")  # True, blue general getting out of check.
+    j.print_board()
+    j.make_move("b3", "b9")  # True, red cannon jumps over red chariot.
+    j.print_board()
+    j.make_move("h8", "b8")  # True, blue cannon jumps blue horse and captures red chariot.
+    j.print_board()
+    j.make_move("b9", "f9")  # True, red cannon jumps general and captures blue guard within blue fortress.
+    j.print_board()
+    j.make_move("e9", "f9")  # True, blue general captures red cannon horizontal move.
+    j.print_board()
+    j.make_move("h1", "g3")   # True, red horse, left down diagonal.
+    j.print_board()
+    j.make_move("c6", "c4")  # True, blue chariot captures red horse, forward move.
+    j.print_board()
+    j.make_move("i4", "i5")  # True, red soldier forward move.
+    j.print_board()
+    j.make_move("i6", "i5")  # True, blue soldier captures red soldier with vertical move.
+    j.print_board()
+    j.make_move("g4", "g5")  # True, red soldier move vertically.
+    j.print_board()
+    j.make_move("c4", "c3")  # True, blue chariot vertical move, red general in check.
+    j.print_board()
+    j.make_move("d3", "e2")  # True, general moves diagonal within fortress to get out of check.
+    j.print_board()
+    j.make_move("c3", "g3")  # True, blue chariot captures red horse with horizontal move.
+    j.print_board()
+    j.make_move("f2", "f3")     # True, true red guard vertical move within palace.
+    j.print_board()
+    j.make_move("d7", "b4")  # True, blue elephant left up diagonal put red general in check.
+    j.print_board()
+    j.make_move("e2", "e1")  # True, red general moves out of check.
+    j.print_board()
+    j.make_move("g3", "g5")  # True, blue chariot captures red soldier, vertical move.
+    j.print_board()
+    j.make_move("d4", "f1")  # True, elephant back right diagonal.
+    j.print_board()
+    j.make_move("b8", "b1")  # True, blue cannon jump over blue elephant and check red general.
+    j.print_board()
+    print(j.make_move("e1", "f2"))  # False, no diagonal line.
+    j.make_move("d1", "d2")  # True, red guard moves so cannon has no piece to jump, general out of check.
+    j.print_board()
+    j.make_move("g5", "g3")  # True, blue chariot vertical move.
+    j.print_board()
+    j.make_move("f1", "d4")  # True,  red elephant down and right diagonal.
+    j.print_board()
+    j.make_move("b1", "g1")  # True, blue cannon captures red elephant, jumps over red general
+    j.print_board()
+    j.make_move("i1", "h1")  # True, red chariot horizontal move.
+    j.print_board()
+    j.make_move("i10", "h10")  # True blue chariot horizontal move.
+    j.print_board()
+    j.make_move("h1", "h10")  # True, red chariot captures blue chariot, vertical move.
+    j.print_board()
+    j.make_move("g8", "h10")  # True, blue horse captures red chariot, back and left diagonal.
+    j.print_board()
+    j.make_move("e4", "f4")  # True,  Red soldier right horizontal move.
+    j.print_board()
+    j.make_move("g3", "g2")  # True, blue chariot vertical move.
+    j.print_board()
+    j.make_move("d2", "d3")  # True, red guard diagonal blocks blue elephant.
+    j.print_board()
+    j.make_move("g2", "g4")  # True, blue chariot vertical move.
+    j.print_board()
+    j.make_move("e1", "e2")  # True, general vertical move within fortress.
+    j.print_board()
+    j.make_move("g4", "f4")  # True, chariot captures red soldier, horizontal move.
+    j.print_board()
+    j.make_move("d4", "a6")  # True, blue elephant down and left diagonal.
+    j.print_board()
+    j.make_move("e6", "e5")  # True, blue soldier vertical move.
+    j.print_board()
+    j.make_move("a6", "c9")  # True, red elephant right down diagonal.
+    j.print_board()
+    j.make_move("e5", "e4")  # True, blue soldier vertical move.
+    j.print_board()
+    j.make_move("c9", "e6")  # True, red elephant up right diagonal.
+    j.print_board()
+    j.make_move("b4", "e6")  # True, blue elephant captures red elephant right down diagonal.
+    j.print_board()
+    j.make_move("d3", "d2")  # True, red guard backward move within fortress.
+    j.print_board()
+    j.make_move("h10", "g8")  # True, horse up and left diagonal.
+    j.print_board()
+    j.make_move("e2", "e1")  # True, general backwards move.
+    j.print_board()
+    j.make_move("f4", "f3")  # True, blue chariot captures red guard with vertical move.
+    j.print_board()
+    j.make_move("d2", "e2")  # True, red guard backwards move within fortress.
+    j.print_board()
+    j.make_move("e4", "e3")    # True, blue soldier forward move.
+    j.print_board()
+    j.make_move("e1", "e1")  # True, red passes turn since not in check.
+    j.print_board()
+    j.make_move("e6", "h4")  # True, blue elephant right up diagonal.
+    j.print_board()
+    j.make_move("e1", "e1")  # True, red passes since not in check.
+    j.print_board()
+    j.make_move("f3", "e2")  # True, bleu chariot up left diagonal within fortress lines, captures red guard.
+    j.print_board()
+    print(j.is_check_mate("red"))  # red, is in check mate, has no available moves.
+    print(j.get_game_state())  # Blue has won, since red is check mate no need to capture the red general.
+    print(j.make_move("e1", "e2"))  # False, blue has already won game red can't continue to move.
+    print(j.make_move("e2", "e2"))  # False, blue has already won game can't continue to play, game is over.
 
 
 if __name__ == "__main__":
