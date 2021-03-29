@@ -159,13 +159,11 @@ class RedGeneral(JanggiPiece):
 
         moves = set()
         if current_spot in {(0, 3), (0, 5), (2, 3), (2, 5), (1, 4)}:
-            # If in corners or center of blue fortress add diagonals.                                     # Down, right.
+            # If in corners or center of blue fortress add diagonals. Down, right. Down, left. Up, right. Up, left.
             moves = moves | set(self.get_legal_moves(board, opposition, count + 1, (row + 1, column + 1)) |
-                                self.get_legal_moves(board, opposition, count + 1,
-                                                     (row + 1, column - 1)) |  # Down, left.
-                                self.get_legal_moves(board, opposition, count + 1,
-                                                     (row - 1, column + 1)) |  # Up, right.
-                                self.get_legal_moves(board, opposition, count + 1, (row - 1, column - 1)))  # Up, left.
+                                self.get_legal_moves(board, opposition, count + 1, (row + 1, column - 1)) |
+                                self.get_legal_moves(board, opposition, count + 1, (row - 1, column + 1)) |
+                                self.get_legal_moves(board, opposition, count + 1, (row - 1, column - 1)))
 
         # Add up, down, left and right moves for all positions.
         moves = moves | set(self.get_legal_moves(board, opposition, count + 1, (row + 1, column)) |  # Down.
@@ -373,7 +371,6 @@ class Elephant(JanggiPiece):
             return {current_spot}
 
         if count == 1:  # If initial move legal, check it's mid moves.
-
             if row > self.get_row():  # Initial move downwards. Recursive case.
                 return set(self.get_legal_moves(board, opposition, count + 1, (row + 1, column + 1), "++") |
                            self.get_legal_moves(board, opposition, count + 1, (row + 1, column - 1), "+-"))
@@ -391,7 +388,6 @@ class Elephant(JanggiPiece):
                            self.get_legal_moves(board, opposition, count + 1, (row - 1, column - 1), "--"))
 
         if count == 2:  # If mid move legal, check it's final move.
-
             if direction == "++":  # If mid move was in ++ direction continue in that direction.
                 return set(self.get_legal_moves(board, opposition, count + 1, (row + 1, column + 1), None))
 
@@ -477,7 +473,6 @@ class Chariot(JanggiPiece):
 
         moves = set()
         if current_spot in {(0, 3), (0, 5), (1, 4), (2, 3), (2, 5), (7, 3), (7, 5), (9, 3), (9, 5), (8, 4)}:
-
             # If in either fortress with a diagonal add diagonal moves.                        # Up right.
             moves = moves | set(self.get_legal_moves(board, opposition, (row + 1, column + 1), "++") |
                     self.get_legal_moves(board, opposition, (row + 1, column - 1), "+-") |  # Up left.
@@ -532,40 +527,23 @@ class Cannon(JanggiPiece):
         if count > 1:  # Base case, if more than one player that's not a cannon between current and initial positions.
             return set()
 
+        if count == 1 and current in opposition:
+            # Base case. If one piece between current and initial positions and current is an opponent.
+            return {current}
+
         if count == 1 and board[row][column] == "":
             # Recursive case. If one piece between current and initial positions and current is empty.
             if direction == "+=":  # Moving down board.
                 return {current} | set(self.get_legal_moves(board, opposition, positions, count, (row + 1, column),
                         "+="))
-
             elif direction == "-=":  # Moving up board.
                 return {current} | set(self.get_legal_moves(board, opposition, positions, count, (row - 1, column),
                         "-="))
-
             elif direction == "=+":  # Moving right.
                 return {current} | set(self.get_legal_moves(board, opposition, positions, count, (row, column + 1),
                         "=+"))
-
             else:  # Moving left.
                 return {current} | set(self.get_legal_moves(board, opposition, positions, count, (row, column - 1),
-                        "=-"))
-
-        if count == 1 and current in opposition:
-            # Recursive case. If one piece between current and initial positions and current is an opponent.
-            if direction == "+=":  # Moving down board.
-                return {current} | set(self.get_legal_moves(board, opposition, positions, count + 1, (row + 1, column),
-                        "+="))
-
-            elif direction == "-=":  # Moving up board.
-                return {current} | set(self.get_legal_moves(board, opposition, positions, count + 1, (row - 1, column),
-                        "-="))
-
-            elif direction == "=+":  # Moving right.
-                return {current} | set(self.get_legal_moves(board, opposition, positions, count + 1, (row, column + 1),
-                        "=+"))
-
-            else:  # Moving left.
-                return {current} | set(self.get_legal_moves(board, opposition, positions, count + 1, (row, column - 1),
                         "=-"))
 
         if board[row][column] == "":  # If location is empty, continue in same direction. Recursive case.
@@ -863,7 +841,7 @@ class JanggiGame:
         Receives player whose turn it is and sets game state to that player winning.
         """
         if player == "blue":
-            self._game_state = "Blue_WON"
+            self._game_state = "BLUE_WON"
         else:
             self._game_state = "RED_WON"
 
@@ -1098,16 +1076,16 @@ def main():
     """
     # Basic tests from readme.
     game = JanggiGame()
-    print(game.make_move('c1', 'e3'))  # should be False because it's not Red's turn
-    print(game.make_move("a7", "b7"))  # should return True
-    print(game.is_in_check('blue'))  # should return False
-    print(game.make_move('a4', 'a5'))  # should return True
-    print(game.get_game_state())  # should return UNFINISHED
-    print(game.make_move('b7', 'b6'))  # should return True
-    print(game.make_move('b3', 'b6'))  # should return False because it's an invalid move
-    print(game.make_move('a1', 'a4'))  # should return True
-    print(game.make_move('c7', 'd7'))  # should return True
-    print(game.make_move('a4', 'a4'))  # this will pass the Red's turn and return True
+    print(game.make_move('c1', 'e3'))  # should be False because it's not Red's turn.
+    print(game.make_move("a7", "b7"))  # should return True.
+    print(game.is_in_check('blue'))  # should return False.
+    print(game.make_move('a4', 'a5'))  # should return True.
+    print(game.get_game_state())  # should return UNFINISHED.
+    print(game.make_move('b7', 'b6'))  # should return True.
+    print(game.make_move('b3', 'b6'))  # should return False because it's an invalid move.
+    print(game.make_move('a1', 'a4'))  # should return True.
+    print(game.make_move('c7', 'd7'))  # should return True.
+    print(game.make_move('a4', 'a4'))  # this will pass the Red's turn and return True.
 
     # Playing out a game.
     j = JanggiGame()
